@@ -18,11 +18,12 @@ from playwright.async_api import async_playwright, expect
 
 # asyncio.run(main())
 # PROXY = "http://127.0.0.1:9221"
-if not os.path.exists("texts"):
-    os.mkdir("texts")
+cur = os.getcwd()
+if not os.path.exists(os.path.join(cur, "crawler/texts")):
+    os.mkdir(os.path.join(cur, "crawler/texts"))
 
-if not os.path.exists("images"):
-    os.mkdir("images")
+# if not os.path.exists("images"):
+#     os.mkdir("images")
     
 texts = []
 async def get_illustration(context, url):
@@ -138,4 +139,4 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-    pickle.dump(texts,open("texts/results.pkl","wb"))
+    pickle.dump(texts,open("crawler/texts/results.pkl","wb"))

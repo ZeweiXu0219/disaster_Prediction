@@ -5,7 +5,7 @@ import spacy
 import requests
 from tqdm import tqdm
 
-########### Annotation ###########
+########### Requests ###########
 def read_config(path):
     """
     read config yaml file
@@ -81,48 +81,3 @@ def requests_parser(requests_json):
     return output
 
 ###############################
-
-########### Data Preprocessing ###########
-def clean_url(text):
-    """
-    clean the url in text
-
-    Args:
-        text (str): tweet text
-
-    Returns:
-        str: cleaned text
-    """
-    url_pattern = r'(https?://[^\s]+)'
-    urls = re.findall(url_pattern, text)
-    
-    for element in urls:
-        text = text.replace(element, '')
-    return text
-
-def get_special_token(texts:list) -> list:
-    
-    if not isinstance(texts, list):
-        raise ValueError(f"Type of Input 'texts' should be 'str', but we get {type(texts)}")
-    
-    nlp = spacy.load('en_core_web_sm')
-    
-    special_tokens = []
-    for sentence in tqdm(texts):
-        for tk in nlp(str(sentence)):
-            if (tk.is_alpha and tk.lang_ == 'en') or tk.text.isdigit() or tk.is_punct or tk.is_space:
-                continue
-            else:
-                if tk.text not in special_tokens and not tk.text.startswith('@') and '’' not in tk.text:
-                    special_tokens.append(tk.text)
-    
-    return special_tokens
-
-def is_float(value):
-    if value.count('.') == 1:
-        left, right = value.split('.')
-        if (left.isdigit() or (left and left[0] == '-' and left[1:].isdigit())) and right.isdigit():
-            return True
-    elif value.isdigit() or (value and value[0] == '-' and value[1:].isdigit()):
-        return True
-    return False

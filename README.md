@@ -15,7 +15,9 @@ I will introduce what we have done in each part and break them down. Hope it wil
 ## BreakDown Details
 ### Datasets
 Data Source: Twitter Texts
-Approach: Web crawler ([code_source](https://www.bilibili.com/video/BV1mx4y1t7Uo/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=e4945a960ebe99f5b861521b8f23add7)
+
+Approach: Web crawler ([code_source](https://www.bilibili.com/video/BV1mx4y1t7Uo/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=e4945a960ebe99f5b861521b8f23add7))
+
 Sample_count:
 
 Brief Explanation

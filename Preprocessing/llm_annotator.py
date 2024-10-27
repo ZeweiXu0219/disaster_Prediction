@@ -5,6 +5,7 @@ import json
 import requests
 cur = os.getcwd()
 sys.path.append(cur)
+from tqdm import tqdm
 from utils.utils import read_config, requests_parser, make_requests
 
 class Annotator():
@@ -27,7 +28,8 @@ class Annotator():
             ValueError: if there is no openai-api-key and prompt detected, the ValueError will be raised.
         """
         ## get basic config
-        data = read_config(self.config_path)
+        all_config = read_config(self.config_path)
+        data = all_config['Annotator']
         openai_api_key = data.get("openai-api-key","")
         self.model = data.get("model", "gpt-40-mini")
         self.url = data.get("url", "https://api.openai.com/v1/chat/completions")
@@ -52,14 +54,14 @@ class Annotator():
     def __call__(self,querys):
         self.get_config()
         result = []
-        for q in querys:
+        for q in tqdm(querys):
             response = make_requests(self.url, self.model, self.prompt, q)
             result.append(response)
         return result
 
 if __name__ == "__main__":
     pwd = os.getcwd()
-    config_path = os.path.join(pwd,"annotation\config.yaml")
+    config_path = os.path.join(pwd,"config\config.yaml")
     prompthub_path = os.path.join(pwd,"config\PromptHub.yaml")
     api_caller = Annotator(config_path=config_path, prompthub_path=prompthub_path)
     query = 'Fire in Berlin CT Lamentation Mountain #Connecticut #Wildfire'

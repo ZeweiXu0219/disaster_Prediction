@@ -1,0 +1,4 @@
+Annotator:
+  model: gpt-4o-mini
+  url: https://api.openai.com/v1/chat/completions
+  openai-api-key: 

@@ -2,8 +2,10 @@ import os
 import sys
 import pickle
 import pandas as pd
+
 from llm_annotator import Annotator
 from preprocessing import Preprocessing
+from utils.utils import requests_parser, code_parser
 
 def main(texts):
     ## preprocessing
@@ -20,6 +22,24 @@ def main(texts):
     ## save
     pickle.dump(responses, open("Preprocessing\data\llm_label_raw_result.pkl","wb"))
 
+def result_parser(raw_responses):
+    result = []
+    for response in raw_responses:
+        if_parser = False
+        for idx, method in enumerate(['split','regulation']):
+            respo = requests_parser(response)
+            respo = code_parser(respo,method=method)
+            try:
+                res = eval(respo)
+                if_parser = True
+                break
+            except:
+                print(f"尝试 {idx + 1} 失败")
+            if idx == 2 and not if_parser:
+                print(response)
+                res = {"result":"","location":"","disaster":""}
+        result.append(res)
+    return result
 
 if __name__ == '__main__':
     data = pd.read_csv("..\crawler_dataset.csv") 

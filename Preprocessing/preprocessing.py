@@ -76,7 +76,7 @@ class Preprocessing():
     def clean_texts(self, texts):
         result = []
         for sentence in texts:
-            clean = re.sub(r'[^a-zA-Z0-9\s.,!?;:\'"()\-\#]', '', sentence)
+            clean = re.sub(r'[^a-zA-Z0-9\s.,!?;:\'"()\-\#\@]', '', sentence)
             result.append(clean)
         return result
     

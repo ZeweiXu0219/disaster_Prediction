@@ -80,4 +80,28 @@ def requests_parser(requests_json):
         output = output.get('content','')
     return output
 
+def code_parser(text, method='split', tag='json'):
+    """
+    the function is as a parser to extract the json format from the string output
+
+    Args:
+        text (str): output(response)
+        method (str, optional): Now we have two method. 'split', 'regulation'. Defaults to 'split'
+        tag (str, optional): what type of code that you make llm to generate. Defaults to 'json'.
+
+    Returns:
+        str: json format
+    """
+    if method == 'split':
+        text = text.strip('```')
+        text = text.replace("\n",'')
+        text = text.strip()
+        text = text.split(tag)[-1]
+    elif method == 'regulation':
+        json_pattern = re.compile(r'\{.*?\}', re.DOTALL)
+        match = json_pattern.search(text)
+        if match:
+            text = match.group()
+    return text
+
 ###############################

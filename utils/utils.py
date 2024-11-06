@@ -1,9 +1,22 @@
 import re
 import os
 import yaml
+import json
 import spacy
+import pickle
 import requests
 from tqdm import tqdm
+
+def save_file(content, save_path, Type = "pkl"):
+    if Type == "pkl":
+        if not save_path.endswith("pkl"):
+            raise ValueError(f"save path format wrong, save type is {Type}, but you save {save_path}")
+        pickle.dump(content, open(save_path, "wb"))
+    elif Type == "json":
+        if not save_path.endswith("json"):
+            raise ValueError(f"save path format wrong, save type is {Type}, but you save {save_path}")
+        json.dump(content, open(save_path, "wb"), ensure_ascii=False)
+
 
 ########### Requests ###########
 def read_config(path):

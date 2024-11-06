@@ -13,14 +13,14 @@ def main(texts):
     cleaned_data = cleaner(texts)
     ## annotation
     pwd = os.getcwd()
-    config_path = os.path.join(pwd,"config\config.yaml")
-    prompthub_path = os.path.join(pwd,"config\PromptHub.yaml")
+    config_path = os.path.join(pwd,"config/config.yaml")
+    prompthub_path = os.path.join(pwd,"config/PromptHub.yaml")
 
     annotator = Annotator(config_path,prompthub_path)
     responses = annotator(cleaned_data)
     
     ## save
-    pickle.dump(responses, open("Preprocessing\data\llm_label_raw_result.pkl","wb"))
+    pickle.dump(responses, open("Preprocessing/data/crawler_data_result_gpt_4o.pkl","wb"))
 
 def result_parser(raw_responses):
     result = []
@@ -42,5 +42,5 @@ def result_parser(raw_responses):
     return result
 
 if __name__ == '__main__':
-    data = pd.read_csv("..\crawler_dataset.csv") 
+    data = pd.read_csv("/Users/frankxu/Desktop/24Fall/ise540 final project/disaster_Prediction/crawler_dataset_labeled.csv") 
     main(data['text'].tolist())

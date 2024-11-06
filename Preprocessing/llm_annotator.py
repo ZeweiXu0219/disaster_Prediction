@@ -22,7 +22,7 @@ class Annotator():
 
         default:
             url: "https://api.openai.com/v1/chat/completions"
-            model: gpt-40-mini
+            model: gpt-4o-mini
         
         Raises:
             ValueError: if there is no openai-api-key and prompt detected, the ValueError will be raised.
@@ -31,7 +31,7 @@ class Annotator():
         all_config = read_config(self.config_path)
         data = all_config['Annotator']
         openai_api_key = data.get("openai-api-key","")
-        self.model = data.get("model", "gpt-40-mini")
+        self.model = data.get("model", "gpt-4o-mini")
         self.url = data.get("url", "https://api.openai.com/v1/chat/completions")
         if not openai_api_key:
             raise ValueError("there is NO openai-api-key !!!")
@@ -61,8 +61,8 @@ class Annotator():
 
 if __name__ == "__main__":
     pwd = os.getcwd()
-    config_path = os.path.join(pwd,"config\config.yaml")
-    prompthub_path = os.path.join(pwd,"config\PromptHub.yaml")
+    config_path = os.path.join(pwd,"config/config.yaml")
+    prompthub_path = os.path.join(pwd,"config/PromptHub.yaml")
     api_caller = Annotator(config_path=config_path, prompthub_path=prompthub_path)
     query = 'Fire in Berlin CT Lamentation Mountain #Connecticut #Wildfire'
     result = api_caller([query])

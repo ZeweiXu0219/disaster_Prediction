@@ -33,12 +33,11 @@ def read_config(path):
         data = yaml.safe_load(file)
     return data
 
-def make_requests(url, model, prompt, query, system='', need_api_key=True):
+def make_requests(url, model, prompt, system='', need_api_key=True):
     """
     post a requests by using OpenAI API
 
     """
-    prompt = prompt.replace("{query}",query)
     template = {
         "model":model,
         "messages":[{"role":"user","content":prompt}]

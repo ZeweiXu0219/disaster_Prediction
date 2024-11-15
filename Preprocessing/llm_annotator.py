@@ -55,7 +55,8 @@ class Annotator():
         self.get_config()
         result = []
         for q in tqdm(querys):
-            response = make_requests(self.url, self.model, self.prompt, q)
+            self.prompt = self.prompt.replace("{query}",q)
+            response = make_requests(self.url, self.model, self.prompt)
             result.append(response)
         return result
 

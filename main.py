@@ -17,7 +17,6 @@ def setup_logging():
     """
     设置日志输出到文件和控制台
     """
-    # 使用时间戳生成独一无二的日志文件名
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file_path = f"logs/disaster_prediction_{timestamp}.log"
 
@@ -27,8 +26,8 @@ def setup_logging():
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
-            logging.StreamHandler(),  # 输出到控制台
-            logging.FileHandler(log_file_path, mode='a', encoding='utf-8')  # 输出到文件
+            logging.StreamHandler(), 
+            logging.FileHandler(log_file_path, mode='a', encoding='utf-8') 
         ]
     )
     logger.info("Logging initialized. Logs will be written to: %s", log_file_path)

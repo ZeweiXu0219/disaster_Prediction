@@ -15,7 +15,7 @@ def save_file(content, save_path, Type = "pkl"):
     elif Type == "json":
         if not save_path.endswith("json"):
             raise ValueError(f"save path format wrong, save type is {Type}, but you save {save_path}")
-        json.dump(content, open(save_path, "wb"), ensure_ascii=False)
+        json.dump(content, open(save_path, "w"), ensure_ascii=False)
 
 
 ########### Requests ###########
@@ -33,15 +33,23 @@ def read_config(path):
         data = yaml.safe_load(file)
     return data
 
-def make_requests(url, model, prompt, system='', need_api_key=True):
+def make_requests(url, model, prompt, template="openai", system='', need_api_key=True):
     """
     post a requests by using OpenAI API
 
     """
-    template = {
-        "model":model,
-        "messages":[{"role":"user","content":prompt}]
-    }
+    if template == "openai":
+        template = {
+            "model":model,
+            "messages":[{"role":"user","content":prompt}]
+        }
+    else:
+        "ollama template"
+        template = {
+            "model":model,
+            "prompt":prompt,
+            "stream":False
+        }
     
     if system:
         template["messages"].insert(0, {"role":"system","content":system})

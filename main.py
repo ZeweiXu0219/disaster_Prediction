@@ -62,7 +62,7 @@ def prepare(data_path, config_path):
                                  "output":""}
         template = {"result":"","location":"","disaster":""}
         text = row['text']
-        new_prompt = prompt.replace("{query}",text)
+        new_prompt = prompt.replace("{query}",str(text))
         template['result'] = row['label']
         template['location'] = row['location']
         template['disaster'] = row['disaster']
@@ -73,32 +73,52 @@ def prepare(data_path, config_path):
         res.append(llamafactory_template)
     return res
 
-def inference(url, data:list, model='llama3'):
+def inference(url, data:list, model='llama3',template="openai"):
     if not isinstance(data, list):
         data = [data]
     ans = []
     raw_result = []
     logging.info("Start inference!")
     for prompt in tqdm(data):
-        response = make_requests(url, model, prompt, need_api_key=False)
+        response = make_requests(url, model, prompt, template=template, need_api_key=False)
         result = requests_parser(response)
         ans.append(result)
         raw_result.append(response)
     return ans, raw_result
 
-def main(data_path, config_path, save_path = None):
+def main(state, data_path, config_path, save_path = None, port = 8000):
+    """
+    change different type of format of api by change different tails of state
+    like 'infer_llamafactory' / 'infer_ollama'
+    """
     setup_logging()
-    prompt_pair = prepare(data_path=data_path, config_path=config_path)
-    if save_path:
-        save_file(prompt_pair, save_path=save_path, Type="json")
-    
+    if state == "prepare":
+        prompt_pair = prepare(data_path=data_path, config_path=config_path)
+        if save_path:
+            save_file(prompt_pair, save_path=save_path, Type="json")
+    elif state.startswith("infer"):
+        data = pd.read_csv(data_path)
+        prompt = get_prompt(config_path)
+        prompts = [prompt.replace("{query}",str(query)) for query in data['text'].tolist()]
+        if state.endswith("llamafactory"):
+            url = f"http://localhost:{port}/v1/chat/completions"
+            result,_ = inference(url, prompts)
+        elif state.endswith("ollama"):
+            url = "http://localhost:11434/api/generate"
+            result,_ = inference(url, prompts, template="ollama")
+        else:
+            logging.error(f"your state is {state}, but we only have ['infer_llamafactory','infer_ollama']")
+        if save_path:
+            save_file({"result":result}, save_path=save_path, Type="json")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Disaster Prediction Data Preparation Script")
+    parser.add_argument("--state", type=str, required=True, default="prepare", help="which state you need to run.")
     parser.add_argument("--data_path", type=str, required=True, help="Path to the input dataset CSV file.")
     parser.add_argument("--config_path", type=str, required=False, default="config/PromptHub.yaml", help="Path to the config file (YAML).")
     parser.add_argument("--save_path", type=str, required=False, help="Path to save the output JSON file.")
+    parser.add_argument("--port", type=int, required=False, help="set the port of url")
 
     args = parser.parse_args()
 
-    main(args.data_path, args.config_path, args.save_path)
+    main(args.state, args.data_path, args.config_path, args.save_path, port=args.port)

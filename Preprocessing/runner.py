@@ -5,7 +5,7 @@ import pandas as pd
 
 from llm_annotator import Annotator
 from preprocessing import Preprocessing
-from utils.utils import requests_parser, code_parser
+from utils.utils import requests_parser, code_parser, save_file
 
 def main(texts):
     ## preprocessing
@@ -20,7 +20,8 @@ def main(texts):
     responses = annotator(cleaned_data)
     
     ## save
-    pickle.dump(responses, open("Preprocessing/data/crawler_data_result_gpt_4o.pkl","wb"))
+    # pickle.dump(responses, open("Preprocessing/data/crawler_data_result_gpt_4o.pkl","wb"))
+    save_file(content=responses, save_path="Preprocessing/data/crawler_data_result_gpt_4o.pkl", Type="pkl")
 
 def result_parser(raw_responses):
     result = []

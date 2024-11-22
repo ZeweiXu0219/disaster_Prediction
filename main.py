@@ -1,11 +1,13 @@
 import os
 import sys
+import json
 import logging
 import datetime
 import argparse
 import pandas as pd
 from tqdm import tqdm
-from utils.utils import read_config, save_file, make_requests, requests_parser
+from sklearn.metrics import classification_report
+from utils.utils import read_config, save_file, make_requests, requests_parser, code_parser
 
 # 设置日志的基本配置
 
@@ -85,6 +87,31 @@ def inference(url, data:list, model='llama3',template="openai"):
         raw_result.append(response)
     return ans, raw_result
 
+
+def evaluation(data_path, llm_result_path,save_path):
+    result = json.load(open(llm_result_path,"r"))
+    result = result['result']
+    data = pd.read_csv(data_path)
+    data['label'] = data['label'].fillna(0).astype(int)
+
+    llm_result = []
+    for res in result:
+        str_result = code_parser(res)
+        str_result = str_result.replace("\n","")
+        str_result = str_result.replace("nan","None")
+        try:
+            r = eval(str_result)
+        except:
+            r = {"result":"","location":"","disaster":""}
+        llm_result.append(r)
+
+    df = pd.DataFrame(llm_result)
+    logging.info(classification_report(data['label'].tolist(),df['result'].tolist()))
+    df['ground_truth'] = data['label'].tolist()
+    df = df[['text','ground_truth','label','location','disaster']]
+    df.to_csv(save_path,index=False)
+
+
 def main(state, data_path, config_path, save_path = None, port = 8000):
     """
     change different type of format of api by change different tails of state
@@ -120,8 +147,10 @@ if __name__ == "__main__":
     parser.add_argument("--data_path", type=str, required=True, help="Path to the input dataset CSV file.")
     parser.add_argument("--config_path", type=str, required=False, default="config/PromptHub.yaml", help="Path to the config file (YAML).")
     parser.add_argument("--save_path", type=str, required=False, help="Path to save the output JSON file.")
+    parser.add_argument("--final_save_path", type=str, required=True, help="Path to save the final csv file.")
     parser.add_argument("--port", type=int, required=False, help="set the port of url")
 
     args = parser.parse_args()
 
     main(args.state, args.data_path, args.config_path, args.save_path, port=args.port)
+    evaluation(args.data_path, args.save_path, args.final_save_path)

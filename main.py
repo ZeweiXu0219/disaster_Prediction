@@ -91,13 +91,17 @@ def main(state, data_path, config_path, save_path = None, port = 8000):
     like 'infer_llamafactory' / 'infer_ollama'
     """
     setup_logging()
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
     if state == "prepare":
         prompt_pair = prepare(data_path=data_path, config_path=config_path)
         if save_path:
             save_file(prompt_pair, save_path=save_path, Type="json")
     elif state.startswith("infer"):
         data = pd.read_csv(data_path)
-        prompt = get_prompt(config_path)
+        
+        _,prompt = get_prompt(config_path)
         prompts = [prompt.replace("{query}",str(query)) for query in data['text'].tolist()]
         if state.endswith("llamafactory"):
             url = f"http://localhost:{port}/v1/chat/completions"

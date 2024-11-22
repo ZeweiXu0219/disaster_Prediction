@@ -6,3 +6,4 @@ PyYAML==6.0.2
 Requests==2.32.3
 spacy==3.8.2
 tqdm==4.66.5
+scikit-learn==1.5.2

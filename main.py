@@ -106,9 +106,13 @@ def evaluation(data_path, llm_result_path,save_path):
         llm_result.append(r)
 
     df = pd.DataFrame(llm_result)
-    logging.info(classification_report(data['label'].tolist(),df['result'].tolist()))
+    df['result'] = df['result'].astype(int)
+    report = classification_report(data['label'].tolist(),df['result'].tolist())
+    logging.info(report)
+    print(report)
+    df['text'] = data['text'].tolist()
     df['ground_truth'] = data['label'].tolist()
-    df = df[['text','ground_truth','label','location','disaster']]
+    df = df[['text','ground_truth','result','location','disaster']]
     df.to_csv(save_path,index=False)
 
 

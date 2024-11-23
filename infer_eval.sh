@@ -3,8 +3,8 @@
 # 设置变量
 DATA_PATH="data/test.csv"
 CONFIG_PATH="config/PromptHub.yaml"
-SAVE_PATH="data/test_data/disaster_prediction.json"
-FINAL_SAVE_PATH="data/test_analysis.csv"
+SAVE_PATH="data/test_data/disaster_prediction_1B.json"
+FINAL_SAVE_PATH="data/test_analysis_1B.csv"
 PORT="8000"
 
 # 创建日志目录

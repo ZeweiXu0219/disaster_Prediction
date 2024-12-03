@@ -30,7 +30,7 @@ In this part, we use **web crawler** to get some Twitter Texts. Because I am not
 
 Statement: *The tweet contents are for performance purposes only and are not used for commercial purposes.*
 
-#### Evaluation Dataset @Zhaolin99
+#### Evaluation Dataset
 The evaluation dataset consists of 314 crawled tweets. To ensure the dataset includes disaster-related tweets without directly 
 searching for specific disaster-related keywords, a Twitter account following several news and climate-related public accounts was used. 
 Recommended tweets from these sources were crawled without reliance on keyword-based searches, resulting in a broader and less biased 
@@ -112,7 +112,7 @@ For our project, we are going to use the [<u>**Llama3.1-8B-Instruct**</u>](https
 
 ### 6. Fine-tuning
 
-#### BERT-based model @Zhaolin99
+#### BERT-based model 
 The fine-tuning process for RoBERTa and DeBERTa models focused on disaster-related tweet classification and employed strategies to mitigate overfitting while optimizing performance.
 Addressing Overfitting
 
